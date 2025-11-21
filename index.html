@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tarik Tambang Matematika</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="game-container">
+        <header class="game-header">
+          <div>
+            <p class="eyebrow">Tarik Tambang Matematika</p>
+            <h1>Tarik Tambang Matematika</h1>
+          </div>
+        </header>
+
+        <div class="setup-screen" id="setup-screen">
+          <section class="tournament-panel">
+            <div class="panel-header">
+              <h2>⚙️ Pengaturan Turnamen</h2>
+              <p class="panel-subtitle">Atur tim dan mulai kompetisi matematika seru!</p>
+            </div>
+
+            <form id="tournament-form">
+              <div class="form-row">
+                <label for="team-count">📊 Jumlah tim</label>
+                <input id="team-count" type="number" min="2" max="6" value="2" />
+              </div>
+              <div id="team-inputs"></div>
+              <button type="submit">💾 Simpan tim</button>
+            </form>
+
+            <div class="standings">
+              <h3>🏆 Papan Skor Turnamen</h3>
+              <div id="standings-list"></div>
+            </div>
+
+            <div class="match-chooser">
+              <div class="chooser-label">Pilih Pertandingan</div>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: center;">
+                <select id="team-a"></select>
+                <span>VS</span>
+                <select id="team-b"></select>
+                <button id="start-match" type="button">🚀 Mulai Pertandingan</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="match-screen hidden" id="match-screen">
+          <section class="match-info">
+            <div class="match-score">
+              <div>
+                <p id="team-label-blue">Tim Biru</p>
+                <strong id="score-blue">0</strong>
+              </div>
+              <div>
+                <p id="team-label-red">Tim Merah</p>
+                <strong id="score-red">0</strong>
+              </div>
+            </div>
+
+            <div class="arena">
+              <div class="team team-blue">
+                <div class="chibi" id="chibi-blue"></div>
+                <div class="team-name" id="team-name-blue">Tim Biru</div>
+              </div>
+              <div class="rope-wrapper">
+                <div class="rope-track">
+                  <div class="marker" id="marker"></div>
+                </div>
+              </div>
+              <div class="team team-red">
+                <div class="chibi" id="chibi-red"></div>
+                <div class="team-name" id="team-name-red">Tim Merah</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="question-panel">
+            <p class="question-text" id="question">Memuat soal...</p>
+            <div class="calculators">
+              <div class="calculator team-blue" data-team="blue">
+                <div class="calc-header">
+                  <span>Tim Biru</span>
+                  <small>Jawab lewat kalkulator</small>
+                </div>
+                <div class="calc-display" data-display="blue">0</div>
+                <div class="calc-buttons">
+                  <button data-key="7">7</button>
+                  <button data-key="8">8</button>
+                  <button data-key="9">9</button>
+                  <button data-key="4">4</button>
+                  <button data-key="5">5</button>
+                  <button data-key="6">6</button>
+                  <button data-key="1">1</button>
+                  <button data-key="2">2</button>
+                  <button data-key="3">3</button>
+                  <button data-action="clear">C</button>
+                  <button data-key="0">0</button>
+                  <button data-action="back">⌫</button>
+                </div>
+              </div>
+
+              <div class="calculator team-red" data-team="red">
+                <div class="calc-header">
+                  <span>Tim Merah</span>
+                  <small>Jawab lewat kalkulator</small>
+                </div>
+                <div class="calc-display" data-display="red">0</div>
+                <div class="calc-buttons">
+                  <button data-key="7">7</button>
+                  <button data-key="8">8</button>
+                  <button data-key="9">9</button>
+                  <button data-key="4">4</button>
+                  <button data-key="5">5</button>
+                  <button data-key="6">6</button>
+                  <button data-key="1">1</button>
+                  <button data-key="2">2</button>
+                  <button data-key="3">3</button>
+                  <button data-action="clear">C</button>
+                  <button data-key="0">0</button>
+                  <button data-action="back">⌫</button>
+                </div>
+              </div>
+            </div>
+
+            <p class="status" id="status">
+              Isi jawaban dengan kalkulator untuk menarik tambang!
+            </p>
+
+            <div class="controls">
+              <button id="restart">Mulai Ulang</button>
+              <button id="fullscreen" type="button" class="ghost">Fullscreen</button>
+              <button id="edit-teams" type="button" class="ghost">Ubah Tim</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div class="victory-modal hidden" id="victory-modal">
+      <div class="victory-content">
+        <div class="victory-icon">🏆</div>
+        <h2 class="victory-title">Selamat!</h2>
+        <p class="victory-team" id="victory-team-name">Tim Pemenang</p>
+        <p class="victory-message">Mencapai 10 jawaban benar!</p>
+        <div class="confetti-container" id="confetti-container"></div>
+        <button class="victory-button" id="close-victory">Lanjutkan</button>
+      </div>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
+
