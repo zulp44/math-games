@@ -2,6 +2,8 @@ const stageElement = document.querySelector(".stage");
 const questionEl = document.getElementById("question");
 const statusEl = document.getElementById("status");
 const markerEl = document.getElementById("marker");
+const ropeTrackEl = document.querySelector(".rope-track");
+
 const restartBtn = document.getElementById("restart");
 const fullscreenButtons = Array.from(document.querySelectorAll("[data-fullscreen]"));
 const editTeamsBtn = document.getElementById("edit-teams");
@@ -33,13 +35,13 @@ const displayEls = {
 };
 
 const maxPosition = 4;
-const winThreshold = 10;
 
 let position = 0;
 let matchScores = { blue: 0, red: 0 };
 let correctAnswer = null;
 let roundActive = false;
 let nextQuestionTimeout = null;
+let lastWinnerTeam = null;
 
 const teamInputsValue = { blue: "", red: "" };
 
@@ -117,6 +119,37 @@ function updateMarker() {
   markerEl.style.transform = `translate(-50%, -50%) translateX(${percent}%)`;
 }
 
+function updateRopeTrack() {
+  if (!ropeTrackEl) return;
+
+  const progressRatio = Math.min(1, Math.abs(position) / maxPosition);
+  const progressPercent = progressRatio * 100; // 0–100% of the rope length
+
+  // Base: all white when no one leading
+  if (progressPercent === 0) {
+    ropeTrackEl.style.background = "#f9fafb";
+    return;
+  }
+
+  if (position < 0) {
+    // Blue team leading: color grows from the left side
+    const end = progressPercent;
+    ropeTrackEl.style.background = `linear-gradient(90deg,
+      rgba(59, 130, 246, 0.85) 0%,
+      rgba(59, 130, 246, 0.85) ${end}%,
+      #f9fafb ${end}%,
+      #f9fafb 100%)`;
+  } else {
+    // Red team leading: color grows from the right side
+    const start = 100 - progressPercent;
+    ropeTrackEl.style.background = `linear-gradient(90deg,
+      #f9fafb 0%,
+      #f9fafb ${start}%,
+      rgba(239, 68, 68, 0.85) ${start}%,
+      rgba(239, 68, 68, 0.85) 100%)`;
+  }
+}
+
 function resetInputs() {
   teamInputsValue.blue = "";
   teamInputsValue.red = "";
@@ -147,6 +180,7 @@ function moveMarker(team) {
     position = Math.min(position + 1, maxPosition);
   }
   updateMarker();
+  updateRopeTrack();
 }
 
 function updateScores() {
@@ -159,9 +193,11 @@ function showVictoryModal(team) {
     console.error("Victory modal elements not found");
     return;
   }
+  lastWinnerTeam = team;
   const teamName = currentMatch[team];
   victoryTeamName.textContent = teamName;
   victoryModal.classList.remove("hidden");
+
   createConfetti();
   playTone("correct");
   setTimeout(() => playTone("correct"), 200);
@@ -184,7 +220,8 @@ function createConfetti() {
 }
 
 function checkMatchVictory(team) {
-  if (matchScores[team] >= winThreshold) {
+  // Victory when the rope has been pulled fully to one side
+  if (Math.abs(position) >= maxPosition) {
     roundActive = false;
     tournamentState.wins[currentMatch[team]] =
       (tournamentState.wins[currentMatch[team]] || 0) + 1;
@@ -207,6 +244,7 @@ function handleCorrectAnswer(team) {
   if (checkMatchVictory(team)) {
     return;
   }
+
   clearTimeout(nextQuestionTimeout);
   nextQuestionTimeout = setTimeout(generateQuestion, 800);
 }
@@ -285,6 +323,8 @@ function updateMatchLabels() {
 function showMatchScreen() {
   setupScreen.classList.add("hidden");
   matchScreen.classList.remove("hidden");
+  restartBtn.classList.remove("hidden");
+  editTeamsBtn.classList.remove("hidden");
 }
 
 function showSetupScreen() {
@@ -292,6 +332,8 @@ function showSetupScreen() {
   setupScreen.classList.remove("hidden");
   pauseMatch();
   setStatus("Mengatur tim... berikutnya mulai pertandingan.", false);
+  restartBtn.classList.add("hidden");
+  editTeamsBtn.classList.add("hidden");
 }
 
 function pauseMatch() {
@@ -304,6 +346,7 @@ function resetMatch() {
   matchScores = { blue: 0, red: 0 };
   updateScores();
   updateMarker();
+  updateRopeTrack();
   clearTimeout(nextQuestionTimeout);
   roundActive = true;
   resetInputs();
@@ -312,11 +355,13 @@ function resetMatch() {
   generateQuestion();
 }
 
-teamCountInput.addEventListener("input", () => {
-  const clamped = clampTeamCount(Number(teamCountInput.value));
-  teamCountInput.value = clamped;
-  renderTeamInputs(clamped);
-});
+if (teamCountInput) {
+  teamCountInput.addEventListener("input", () => {
+    const clamped = clampTeamCount(Number(teamCountInput.value));
+    teamCountInput.value = clamped;
+    renderTeamInputs(clamped);
+  });
+}
 
 document.getElementById("tournament-form").addEventListener("submit", (event) => {
   event.preventDefault();
@@ -359,13 +404,20 @@ function closeVictoryModal() {
   if (victoryModal) {
     victoryModal.classList.add("hidden");
   }
-  const winnerTeam = matchScores.blue >= winThreshold ? "blue" : "red";
-  setStatus(`${currentMatch[winnerTeam]} memenangkan pertandingan dengan ${matchScores[winnerTeam]} poin!`, true);
+  const winnerTeam =
+    lastWinnerTeam || (position > 0 ? "red" : "blue");
+  const winnerPoints = matchScores[winnerTeam] || 0;
+  setStatus(
+    `${currentMatch[winnerTeam]} memenangkan pertandingan dengan ${winnerPoints} poin!`,
+    true
+  );
   // Reset match scores after showing victory
   matchScores = { blue: 0, red: 0 };
   position = 0;
   updateScores();
   updateMarker();
+  updateRopeTrack();
+  lastWinnerTeam = null;
 }
 
 if (closeVictoryBtn) {
@@ -454,7 +506,9 @@ function init() {
   tournamentState.teams.forEach((name) => {
     tournamentState.wins[name] = 0;
   });
-  teamCountInput.value = tournamentState.teamCount;
+  if (teamCountInput) {
+    teamCountInput.value = tournamentState.teamCount;
+  }
   renderTeamInputs();
   updateStandings();
   populateMatchSelectors();
@@ -462,8 +516,8 @@ function init() {
   matchScores = { blue: 0, red: 0 };
   updateScores();
   updateMarker();
+  updateRopeTrack();
   setStatus("Silakan atur tim dulu untuk memulai.");
 }
 
 init();
-

@@ -14,6 +14,8 @@
             <h1>Tarik Tambang Matematika</h1>
           </div>
           <div class="header-actions">
+            <button id="restart" class="hidden">Mulai Ulang</button>
+            <button id="edit-teams" type="button" class="ghost hidden">Ubah Tim</button>
             <button type="button" class="ghost" id="header-fullscreen" data-fullscreen>
               Fullscreen
             </button>
@@ -28,10 +30,6 @@
             </div>
 
             <form id="tournament-form">
-              <div class="form-row">
-                <label for="team-count">📊 Jumlah tim</label>
-                <input id="team-count" type="number" min="2" max="6" value="2" />
-              </div>
               <div id="team-inputs"></div>
               <button type="submit">💾 Simpan tim</button>
             </form>
@@ -87,10 +85,7 @@
             <p class="question-text" id="question">Memuat soal...</p>
             <div class="calculators">
               <div class="calculator team-blue" data-team="blue">
-                <div class="calc-header">
-                  <span>Tim Biru</span>
-                  <small>Jawab lewat kalkulator</small>
-                </div>
+                <div class="calc-header" aria-hidden="true"></div>
                 <div class="calc-display" data-display="blue">0</div>
                 <div class="calc-buttons">
                   <button data-key="7">7</button>
@@ -109,10 +104,7 @@
               </div>
 
               <div class="calculator team-red" data-team="red">
-                <div class="calc-header">
-                  <span>Tim Merah</span>
-                  <small>Jawab lewat kalkulator</small>
-                </div>
+                <div class="calc-header" aria-hidden="true"></div>
                 <div class="calc-display" data-display="red">0</div>
                 <div class="calc-buttons">
                   <button data-key="7">7</button>
@@ -134,29 +126,23 @@
             <p class="status" id="status">
               Isi jawaban dengan kalkulator untuk menarik tambang!
             </p>
-
-            <div class="controls">
-              <button id="restart">Mulai Ulang</button>
-              <button id="edit-teams" type="button" class="ghost">Ubah Tim</button>
-            </div>
           </section>
         </div>
-      </div>
-    </div>
 
-    <!-- Victory Modal -->
-    <div class="victory-modal hidden" id="victory-modal">
-      <div class="victory-content">
-        <div class="victory-icon">🏆</div>
-        <h2 class="victory-title">Selamat!</h2>
-        <p class="victory-team" id="victory-team-name">Tim Pemenang</p>
-        <p class="victory-message">Mencapai 10 jawaban benar!</p>
-        <div class="confetti-container" id="confetti-container"></div>
-        <button class="victory-button" id="close-victory">Lanjutkan</button>
+        <!-- Victory Modal -->
+        <div class="victory-modal hidden" id="victory-modal">
+          <div class="victory-content">
+            <div class="victory-icon">🏆</div>
+            <h2 class="victory-title">Selamat!</h2>
+            <p class="victory-team" id="victory-team-name">Tim Pemenang</p>
+            <p class="victory-message">YEAYYY!!!</p>
+            <div class="confetti-container" id="confetti-container"></div>
+            <button class="victory-button" id="close-victory">Lanjutkan</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <script src="game.js"></script>
   </body>
 </html>
-
