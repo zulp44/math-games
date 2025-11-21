@@ -848,9 +848,16 @@
   
   .tournament-panel form {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    align-items: flex-end;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+  
+  #team-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem 1.5rem;
+    width: 100%;
   }
   
   .form-row {
@@ -876,6 +883,10 @@
     color: #fff;
     font-size: 1rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .tournament-panel form button[type="submit"] {
+    align-self: flex-end;
   }
   
   .form-row input:focus {
@@ -910,36 +921,63 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
+  .standings-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 0.5rem;
+  }
+
+  .standings-header .header-points {
+    text-align: right;
+  }
+
   .standings-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.75rem;
-    margin-top: 0.75rem;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-top: 0;
   }
-  
-  .standings-list span {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(239, 68, 68, 0.2));
+
+  .standings-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.7));
     padding: 0.75rem 1rem;
     border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  
-  .standings-list span:hover {
-    transform: translateX(5px);
+
+  .standings-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
-  
-  .standings-list strong {
+
+  .standings-name {
+    font-weight: 600;
     font-size: 1rem;
+    color: #e2e8f0;
   }
-  
-  .standings-list small {
-    color: var(--yellow);
+
+  .standings-points {
+    background: linear-gradient(135deg, var(--yellow), #fbbf24);
+    color: #0f172a;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    min-width: 3rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(250, 204, 21, 0.3);
   }
   
   .match-chooser {

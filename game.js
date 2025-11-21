@@ -287,7 +287,6 @@ function renderTeamInputs(countOverride) {
     teamInputsContainer.appendChild(row);
   }
 }
-
 function clampTeamCount(value) {
   return Math.min(6, Math.max(2, Number(value) || 2));
 }
@@ -295,9 +294,13 @@ function clampTeamCount(value) {
 function updateStandings() {
   standingsList.innerHTML = "";
   tournamentState.teams.forEach((name) => {
-    const entry = document.createElement("span");
-    entry.innerHTML = `<strong>${name}</strong><small>${tournamentState.wins[name] || 0} poin</small>`;
-    standingsList.appendChild(entry);
+    const item = document.createElement("div");
+    item.className = "standings-item";
+    item.innerHTML = `
+      <span class="standings-name">${name}</span>
+      <span class="standings-points">${tournamentState.wins[name] || 0}</span>
+    `;
+    standingsList.appendChild(item);
   });
 }
 
