@@ -501,7 +501,7 @@
     min-height: 260px;
   }
   
-  .calc-header {
+  /* .calc-header {
     display: flex;
     justify-content: space-between;
     font-size: 0.85rem;
@@ -509,7 +509,7 @@
     text-transform: uppercase;
     color: rgba(248, 250, 252, 0.7);
     min-height: 1.8rem;
-  }
+  } */
   
   .calc-display {
     min-height: 54px;
