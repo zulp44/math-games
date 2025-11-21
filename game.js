@@ -3,7 +3,7 @@ const questionEl = document.getElementById("question");
 const statusEl = document.getElementById("status");
 const markerEl = document.getElementById("marker");
 const restartBtn = document.getElementById("restart");
-const fullscreenBtn = document.getElementById("fullscreen");
+const fullscreenButtons = Array.from(document.querySelectorAll("[data-fullscreen]"));
 const editTeamsBtn = document.getElementById("edit-teams");
 const setupScreen = document.getElementById("setup-screen");
 const matchScreen = document.getElementById("match-screen");
@@ -384,7 +384,7 @@ if (victoryModal) {
   });
 }
 
-fullscreenBtn?.addEventListener("click", () => {
+function toggleFullscreen() {
   if (!stageElement) {
     return;
   }
@@ -393,15 +393,21 @@ fullscreenBtn?.addEventListener("click", () => {
   } else {
     document.exitFullscreen?.().catch(() => {});
   }
+}
+
+function updateFullscreenLabels() {
+  const isFullscreen = Boolean(document.fullscreenElement);
+  fullscreenButtons.forEach((btn) => {
+    btn.textContent = isFullscreen ? "Keluar Fullscreen" : "Fullscreen";
+  });
+}
+
+fullscreenButtons.forEach((btn) => {
+  btn.addEventListener("click", toggleFullscreen);
 });
 
-document.addEventListener("fullscreenchange", () => {
-  if (!fullscreenBtn) {
-    return;
-  }
-  const isFullscreen = Boolean(document.fullscreenElement);
-  fullscreenBtn.textContent = isFullscreen ? "Keluar Fullscreen" : "Fullscreen";
-});
+document.addEventListener("fullscreenchange", updateFullscreenLabels);
+updateFullscreenLabels();
 
 calculators.forEach((calculator) => {
   const team = calculator.dataset.team;
