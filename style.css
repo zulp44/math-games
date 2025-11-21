@@ -65,7 +65,8 @@ body::before {
 .stage {
   width: min(1300px, 100%);
   max-width: 100%;
-  height: min(900px, 100vh);
+  height: min(900px, 92vh);
+  min-height: 600px;
   background: rgba(2, 6, 23, 0.35);
   border-radius: 32px;
   padding: clamp(0.75rem, 2vw, 1.5rem);
